@@ -1,8 +1,7 @@
-[![Docker Image Build Status](https://img.shields.io/github/workflow/status/Minegamer06/docker-mediathekview-webinterface/Publish%20Docker%20image?label=docker%20build)](https://hub.docker.com/r/Minegamer06/mediathekview-webinterface)
+# docker-mediathekview
 [![GitHub-Issues](https://img.shields.io/github/issues/Minegamer06/docker-mediathekview-webinterface)](https://github.com/Minegamer06/docker-mediathekview-webinterface/issues)
 [![GitHub-Releases](https://img.shields.io/github/tag/Minegamer06/docker-mediathekview-webinterface.svg)](https://github.com/Minegamer06/docker-mediathekview-webinterface/releases)
 
-# docker-mediathekview
 X11rdp Version of Mediathekview
 ## About
 Using this container allows you to run Mediathekview as a service and control it via webbrowser like Firefox or Chrome.
@@ -33,19 +32,30 @@ docker pull Minegamer06/mediathekview-webinterface:14.2.0
 ## Running it
 For additional configuration options, have a look at the [available environment-variables](https://github.com/jlesage/docker-baseimage-gui#environment-variables).
 For basic usage, just use
+```yaml
+services:
+  mediathekview-webinterface:
+    image: ghcr.io/minegamer06/docker-mediathekview-webinterface:v14.3.1
+    container_name: mediathekview-webinterface
+    environment:
+      - USER_ID=568 # Optional: Set to match Docker App user
+      - GROUP_ID=568
+    volumes:
+      - ./config:/config
+      - ./output:/output
+    restart: unless-stopped
+    mem_limit: 2500m # Optional: limit RAM usage
+    cpus: 0.5 # Optional: limit CPU
+  restart-cron: # Optional: Restarts the container regularly to trigger auto-downloads ("Abos") and a library scan on startup (auto-download must be enabled in the settings)
+    image: docker:stable
+    container_name: restart_cron
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # ⚠️ Use with caution
+    # Adjust the restart schedule for MediathekView (e.g. weekly on Monday at 10:00) to trigger auto-downloads and library refresh on container start
+    command: >
+      sh -c "echo '0 10 * * 1 docker restart mediathekview-webinterface' >
+      /tmp/crontab &&
+              crontab /tmp/crontab &&
+              crond -f -l 8"
+    restart: unless-stopped
 ```
-docker run -it -p 127.0.0.1:5800:5800 --rm \
-    -v $HOME/.mediathek3:/config:rw \
-    -v <path to your media files>:/output:rw \
-    Minegamer06/mediathekview-webinterface:latest
-```
-
-## Developing
-Make your changes, then build new version:
-`docker build --rm -t mymediathek -f Dockerfile .`
-
-Run the container with some testing environment:
-`docker run --name mymedia -p 127.0.0.1:5800:5800 --rm -it -e USER_ID=99 -e GROUP_ID=99 -e KEEP_APP_RUNNING=1 -v /tmp/mediathek_config:/config:rw -v /tmp/mediathek_downloads:/output:rw  mymediathek:latest`
-
-attach to running container and debug:
-`docker exec -it mymedia bash`
