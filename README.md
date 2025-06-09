@@ -1,13 +1,16 @@
-[![Docker Image Build Status](https://img.shields.io/github/workflow/status/conrad784/docker-mediathekview-webinterface/Publish%20Docker%20image?label=docker%20build)](https://hub.docker.com/r/conrad784/mediathekview-webinterface)
-[![GitHub-Issues](https://img.shields.io/github/issues/conrad784/docker-mediathekview-webinterface)](https://github.com/conrad784/docker-mediathekview-webinterface/issues)
-[![GitHub-Releases](https://img.shields.io/github/tag/conrad784/docker-mediathekview-webinterface.svg)](https://github.com/conrad784/docker-mediathekview-webinterface/releases)
-[![Docker Pulls](https://img.shields.io/docker/pulls/conrad784/mediathekview-webinterface)](https://hub.docker.com/r/conrad784/mediathekview-webinterface)
+[![Docker Image Build Status](https://img.shields.io/github/workflow/status/Minegamer06/docker-mediathekview-webinterface/Publish%20Docker%20image?label=docker%20build)](https://hub.docker.com/r/Minegamer06/mediathekview-webinterface)
+[![GitHub-Issues](https://img.shields.io/github/issues/Minegamer06/docker-mediathekview-webinterface)](https://github.com/Minegamer06/docker-mediathekview-webinterface/issues)
+[![GitHub-Releases](https://img.shields.io/github/tag/Minegamer06/docker-mediathekview-webinterface.svg)](https://github.com/Minegamer06/docker-mediathekview-webinterface/releases)
 
 # docker-mediathekview
 X11rdp Version of Mediathekview
 ## About
 Using this container allows you to run Mediathekview as a service and control it via webbrowser like Firefox or Chrome.
 The X11rdp feature is inherited from [https://github.com/jlesage/docker-baseimage-gui](https://github.com/jlesage/docker-baseimage-gui).
+
+[MediathekView Releases GitHub](https://github.com/mediathekview/MediathekView/tags)
+
+[MediathekView Changelog](https://mediathekview.de/tags/changelog/)
 
 ## Installation
 ### Manual
@@ -20,11 +23,11 @@ The X11rdp feature is inherited from [https://github.com/jlesage/docker-baseimag
 The Github repository is automatically build by Github Actions.
 You can pull it from Docker Hub:
 ```
-docker pull conrad784/mediathekview-webinterface:latest
+docker pull Minegamer06/mediathekview-webinterface:latest
 ```
 Some older versions can also be acquired by using e.g.
 ```
-docker pull conrad784/mediathekview-webinterface:13.3.0-3
+docker pull Minegamer06/mediathekview-webinterface:14.2.0
 ```
 
 ## Running it
@@ -34,7 +37,7 @@ For basic usage, just use
 docker run -it -p 127.0.0.1:5800:5800 --rm \
     -v $HOME/.mediathek3:/config:rw \
     -v <path to your media files>:/output:rw \
-    conrad784/mediathekview-webinterface:latest
+    Minegamer06/mediathekview-webinterface:latest
 ```
 
 ## Developing
