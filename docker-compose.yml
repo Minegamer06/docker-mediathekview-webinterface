@@ -1,14 +1,25 @@
-version: '3'
-
 services:
-  mediathekview:
-    build: .
-    container_name: mediathekview
-    ports:
-      - "5800:5800"
+  mediathekview-webinterface:
+    image: ghcr.io/minegamer06/docker-mediathekview-webinterface:v14.3.1
+    container_name: mediathekview-webinterface
+#    environment:
+#      - USER_ID=568 # Optional: Set to match Docker App user
+#      - GROUP_ID=568
     volumes:
-      - "$HOME/.mediathek3:/config:rw"
-      - "$HOME/MediathekView:/output:rw"
-    environment:
-       - "USER_ID=1000"
-       - "GROUP_ID=1000"
+      - ./config:/config
+      - ./output:/output
+    restart: unless-stopped
+    mem_limit: 2500m # Optional: limit RAM usage
+    cpus: 0.5 # Optional: limit CPU
+  restart-cron: # Optional: Restarts the container regularly to trigger auto-downloads ("Abos") and a library scan on startup (auto-download must be enabled in the settings)
+    image: docker:stable
+    container_name: restart_cron
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # ⚠️ Use with caution
+    # Adjust the restart schedule for MediathekView (e.g. weekly on Monday at 10:00) to trigger auto-downloads and library refresh on container start
+    command: >
+      sh -c "echo '0 10 * * 1 docker restart mediathekview-webinterface' >
+      /tmp/crontab &&
+              crontab /tmp/crontab &&
+              crond -f -l 8"
+    restart: unless-stopped
